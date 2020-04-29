@@ -56,9 +56,24 @@ while i > 0:
             notas_alumnos = pd.DataFrame(diccionario_calificaciones)
             notas_alumnos.index = ["Nombre", "Programacion", "Contabilidad", "Base de Datos", "Economia", "Ingles"]
             
-            print("Promedio general de las asignaturas: \n")
-            print(notas_alumnos.T.mean(axis = 0))
-            print("\n")
+            eleccion = int(input("Eliga una opción: \n 1)- Promedio asignaturas \n 2)- Promedio de alumnos \n"))
+            
+            if eleccion == 1:
+                print("Promedio general de las asignaturas: \n")
+                print(notas_alumnos.T.mean(axis = 0))
+                print("\n")
+                
+                file = open("Promedio_Asignaturas.txt", "w")
+                file.write("%s" %notas_alumnos.T.mean(axis = 0))
+                file.close()
+            else:
+                print("Promedio de cada alumno registrado: \n")
+                print(notas_alumnos[1:6].mean())
+                print("\n")
+                
+                archivo = open("Promedio_Alumnos.txt", "w")
+                archivo.write("%s" %notas_alumnos[1:6].mean())
+                archivo.close()
         except:
             print("No hay datos en esta seccion para mostrar \n")
     
@@ -70,7 +85,7 @@ while i > 0:
                 
             print("Aqui se muestran SOLAMENTE las calificaciones reprobadas de cada alumno: \n")
                 
-            reprobada = notas_alumnos[notas_alumnos[1:5] < 70]
+            reprobada = notas_alumnos[notas_alumnos[1:6] < 70]
                 
             print(reprobada.T)
         except:
