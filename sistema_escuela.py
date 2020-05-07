@@ -1,15 +1,13 @@
-import json
 import pandas as pd
-import os.path
 
 diccionario_alumnos = {}
 diccionario_calificaciones = {}
 
 i = 1
 while i > 0:
-    opcion = int(input("- MENÚ DEL SISTEMA - \n [1] Agregar alumnos \n [2] Ingresar calificaciones \n [3] Estadisticos descriptivos \n [4] Estudiantes Reprobados \n [5] Ver las calificaciones de los alumnos \n \n Eliga el número de la opción que desee: "))
+    opcion = int(input("- MENÚ DEL SISTEMA - \n [1] Agregar alumnos \n [2] Ingresar calificaciones \n [3] Estadisticos descriptivos \n [4] Estudiantes Reprobados \n [5] Ver las calificaciones de los alumnos \n [6] Exportación \n \n Eliga el número de la opción que desee: "))
     
-    if opcion == 1: #Checar si se queda asi o que se ingresen los 30 alumnos de una
+    if opcion == 1: 
         
         clave = int(input("Ingrese la matricula del nuevo estudiante: "))
         nombre = input("Ingrese el nombre del nuevo estudiante: ")
@@ -56,23 +54,37 @@ while i > 0:
             notas_alumnos = pd.DataFrame(diccionario_calificaciones)
             notas_alumnos.index = ["Nombre", "Programacion", "Contabilidad", "Base de Datos", "Economia", "Ingles"]
             
-            eleccion = int(input("Eliga una opción: \n 1)- Promedio asignaturas \n 2)- Promedio de alumnos \n"))
+            eleccion = int(input("\n 1)- Asignaturas \n 2)- Alumnos \n Eliga una opción: "))
             
             if eleccion == 1:
-                print("Promedio general de las asignaturas: \n")
-                print(notas_alumnos.T.mean(axis = 0))
-                print("\n")
+                numbers = notas_alumnos[1:6]
+                print(f"Materia:  Calificaciones registradas \n {numbers.T.count()}")
+                print(f"Materia:  Promedio General \n {numbers.T.mean()}")
+                print(f"Materia:  Desviación estandar \n {numbers.T.std()}")
+                print(f"Materia:  Calificación mas baja \n {numbers.T.min()}")
+                print(f"Materia:  Calificacion mas alta \n {numbers.T.max()}")
                 
-                file = open("Promedio_Asignaturas.txt", "w")
-                file.write("%s" %notas_alumnos.T.mean(axis = 0))
+                file = open("Estadistica_Asignaturas.txt", "w")
+                file.write("%s" %numbers.T.count()+"\n")
+                file.write("%s" %numbers.T.mean()+"\n")
+                file.write("%s" %numbers.T.std()+"\n")
+                file.write("%s" %numbers.T.min()+"\n")
+                file.write("%s" %numbers.T.max())
                 file.close()
             else:
-                print("Promedio de cada alumno registrado: \n")
-                print(notas_alumnos[1:6].mean())
-                print("\n")
+                numbers = notas_alumnos[1:6]
+                print(f"Matricula:  Materias del estudiante \n {numbers.count()}")
+                print(f"Matricula:  Promedio General \n {numbers.mean()}")
+                print(f"Matricula:  Desviación estandar \n {numbers.std()}")
+                print(f"Matricula:  Calificación mas baja \n {numbers.min()}")
+                print(f"Matricula:  Calificación mas alta \n {numbers.max()}")
                 
-                archivo = open("Promedio_Alumnos.txt", "w")
-                archivo.write("%s" %notas_alumnos[1:6].mean())
+                archivo = open("Estadistica_Alumnos.txt", "w")
+                archivo.write("%s" %numbers.count()+"\n")
+                archivo.write("%s" %numbers.mean()+"\n")
+                archivo.write("%s" %numbers.std()+"\n")
+                archivo.write("%s" %numbers.min()+"\n")
+                archivo.write("%s" %numbers.max())
                 archivo.close()
         except:
             print("No hay datos en esta seccion para mostrar \n")
@@ -103,6 +115,23 @@ while i > 0:
             print("\n")
         except:
             print("No hay datos en esta seccion para mostrar \n")
+            
+    elif opcion == 6:
+        
+        notas_alumnos = pd.DataFrame(diccionario_calificaciones)
+        notas_alumnos.index = ["Nombre", "Programacion", "Contabilidad", "Base de Datos", "Economia", "Ingles"]
+        
+        elegir = int(input("\n 1)- Exportar a CSV \n 2)- Exportar a JSON \n Eliga una opción: "))
+        
+        if elegir == 1:
+            print("\n Procederemos a crear el archivo CSV....")
+            notas_alumnos.to_csv(r'notas_alumnos.csv', index=True, header=True)
+            print("-- Exportado -- \n")
+        else:
+            print("\n Procederemos a crear el archivo JSON....")
+            notas_alumnos.T.to_json('notas_alumnos.json', orient= "table")
+            print("-- Exportado -- \n")
+            
             
         
         
